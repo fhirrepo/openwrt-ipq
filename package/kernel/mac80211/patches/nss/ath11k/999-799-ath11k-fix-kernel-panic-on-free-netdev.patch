@@ -1,0 +1,20 @@
+--- a/drivers/net/wireless/ath/ath11k/ahb.c
++++ b/drivers/net/wireless/ath/ath11k/ahb.c
+@@ -442,7 +442,6 @@ static void ath11k_ahb_free_ext_irq(stru
+ 			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
+ 
+ 		netif_napi_del(&irq_grp->napi);
+-		free_netdev(irq_grp->napi_ndev);
+ 	}
+ }
+ 
+--- a/drivers/net/wireless/ath/ath11k/pcic.c
++++ b/drivers/net/wireless/ath/ath11k/pcic.c
+@@ -316,7 +316,6 @@ static void ath11k_pcic_free_ext_irq(str
+ 			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
+ 
+ 		netif_napi_del(&irq_grp->napi);
+-		free_netdev(irq_grp->napi_ndev);
+ 	}
+ }
+ 

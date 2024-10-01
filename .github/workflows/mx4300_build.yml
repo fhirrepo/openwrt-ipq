@@ -39,42 +39,29 @@ jobs:
             - name: Clone config
               run: git clone https://${{ secrets.PAT }}@github.com/fhirrepo/mx4300-config.git files/etc/uci-defaults && rm -rf files/etc/uci-defaults/.git && rm -rf files/etc/uci-defaults/*.yml
 
-            - name: Update scripts
-              run:  ./scripts/feeds update
+            - name: Update feeds
+              # run:  make package/symlinks
+              run: cp feeds.conf.default feeds.conf 
+               && scripts/feeds update -a 
+               && scripts/feeds install -a
 
-            - name: Install scripts
-              run:  ./scripts/feeds install -a
+            - name: Generate MX4300 NSS Config
+              run: cp nss-setup/config-nss.seed .config 
+               && sed -i 's/# CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300 is not set/CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300=y/g' .config
+               && echo "CONFIG_KMOD_ALL=y" >> .config 
+               && echo "CONFIG_FEED_custom_packages=n" >> .config
 
-            - name: Generate config
-              run:  cp nss-setup/config-nss.seed .config
+            - name: Build Config
+              run: make defconfig V=s -j$(nproc)
 
-            - name: Modify config
-              run: sed -i 's/# CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300 is not set/CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300=y/g' .config
+            - name: Build Images
+              run: make V=s -j$(nproc)
 
-            - name: Print initial config we are using
-              run: cat .config
+            - name: Get SHORT SHA 
+              run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
-            - name: Generate full config
-              run:  make defconfig V=s
-
-            - name: Pre-download
-              run: make download -j$(nproc) V=s
-
-            - name: Build firmware images
-              run: make -j$(($(nproc)+1)) V=s
-
-            - name: Pack packages
-              run:  tar cvfz bin/ipq807x.tar.gz -C bin/targets/qualcommax/ipq807x .
-
-            - name: Get SHA
-              uses: benjlevesque/short-sha@v2.2
-
-            - name: copy file to server
-              uses: appleboy/scp-action@v0.1.7
+            - name: Release
+              uses: ncipollo/release-action@v1
               with:
-                host: ${{ secrets.HOST }}
-                username: ${{ secrets.USERNAME }}
-                password: ${{ secrets.PASSWORD }}
-                port: ${{ secrets.PORT }}
-                source: bin/ipq807x.tar.gz
-                target: uploads/${{ env.SHA }}
+                tag: mx4300-nss-${{ env.SHORT_SHA }}
+                artifacts: bin/targets/qualcommax/ipq807x/openwrt-qualcommax-ipq807x*.bin,bin/targets/qualcommax/ipq807x/openwrt-qualcommax-ipq807x-linksys_mx4300.manifest,.config

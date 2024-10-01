@@ -37,7 +37,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Clone config
-              run: git clone https://${{ secrets.PAT }}@github.com/fhirrepo/mx4300-config.git files/etc/uci-defaults && rm -rf files/etc/uci-defaults/.git && rm -rf files/etc/uci-defaults/*.yml
+              run: git clone https://${{ secrets.PAT }}@github.com/fhirrepo/custom_openwrt.git files/etc/uci-defaults && rm -rf files/etc/uci-defaults/.git && rm -rf files/etc/uci-defaults/*.yml
 
             - name: Update feeds
               # run:  make package/symlinks

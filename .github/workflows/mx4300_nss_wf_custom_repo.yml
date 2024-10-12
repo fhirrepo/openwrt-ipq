@@ -53,7 +53,6 @@ jobs:
                && echo "CONFIG_PACKAGE_luci-app-dockerman=y" >> .config
                && echo "CONFIG_PACKAGE_dockerd=y" >> .config
                && echo "CONFIG_PACKAGE_docker=y" >> .config
-               && echo "CONFIG_PACKAGE_docker-compose=y" >> .config
                && echo "CONFIG_FEED_custom_packages=n" >> .config
 
             - name: Build Config

@@ -38,7 +38,11 @@ jobs:
 
             - name: Import config
               run: mv .config_qualcommax .config
-
+               && echo "CONFIG_PACKAGE_openssh-sftp-server=y" >> .config
+               && echo "CONFIG_PACKAGE_luci-app-dockerman=y" >> .config
+               && echo "CONFIG_PACKAGE_dockerd=y" >> .config
+               && echo "CONFIG_PACKAGE_docker=y" >> .config
+               
             - name: Update feeds
               run: make package/symlinks
 

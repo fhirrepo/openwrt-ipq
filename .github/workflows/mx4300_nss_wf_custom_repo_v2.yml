@@ -32,7 +32,10 @@ jobs:
                   file \
                   wget && \
                   sudo apt-get clean
-
+                  
+            - name: Reclaim space for large builds
+              run: rm -rf /opt/hostedtoolcache
+              
             - name: Checkout
               uses: actions/checkout@v4
 

@@ -44,7 +44,7 @@ jobs:
               run: make package/symlinks
 
             - name: Build firmware images
-              run: make -j$(($(nproc)+1)) download world
+              run: make -j1 V=s download world
 
             - name: Get SHA
               uses: benjlevesque/short-sha@v2.2

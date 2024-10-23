@@ -50,6 +50,9 @@ jobs:
                && sed -i 's/# CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300 is not set/CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300=y/g' .config
                && echo "CONFIG_PACKAGE_kmod-fs-ext4=y" >> .config
                && echo "CONFIG_PACKAGE_openssh-sftp-server=y" >> .config
+               && echo "CONFIG_PACKAGE_luci-app-dockerman=y" >> .config
+               && echo "CONFIG_PACKAGE_dockerd=y" >> .config
+               && echo "CONFIG_PACKAGE_docker=y" >> .config
 
             - name: Build Config
               run: make defconfig V=s -j$(nproc)

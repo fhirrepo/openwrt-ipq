@@ -74,5 +74,5 @@ jobs:
             - name: Release
               uses: ncipollo/release-action@v1
               with:
-                tag: mx4300-24.10_nss--${{ env.CUR_DATE }}--${{ env.SHORT_SHA }}
+                tag: mx4300-main_nss--${{ env.CUR_DATE }}--${{ env.SHORT_SHA }}
                 artifacts: bin/targets/qualcommax/ipq807x/openwrt-qualcommax-ipq807x*.bin,bin/targets/qualcommax/ipq807x/openwrt-qualcommax-ipq807x-linksys_mx4300.manifest,.config

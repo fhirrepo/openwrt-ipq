@@ -58,6 +58,7 @@ jobs:
                && echo "CONFIG_PACKAGE_dockerd=y" >> .config
                && echo "CONFIG_PACKAGE_docker-compose=y" >> .config
                && echo "CONFIG_PACKAGE_docker=y" >> .config
+               && echo "CONFIG_PACKAGE_coreutils-nohup=y" >> .config
 
             - name: Build Config
               run: make defconfig V=s -j$(nproc)

@@ -54,10 +54,6 @@ jobs:
                && echo "CONFIG_PACKAGE_block-mount=y" >> .config
                && echo "CONFIG_PACKAGE_kmod-usb-storage-uas=y" >> .config
                && echo "CONFIG_PACKAGE_openssh-sftp-server=y" >> .config
-#               && echo "CONFIG_PACKAGE_luci-app-dockerman=y" >> .config
-#               && echo "CONFIG_PACKAGE_dockerd=y" >> .config
-#               && echo "CONFIG_PACKAGE_docker-compose=y" >> .config
-#               && echo "CONFIG_PACKAGE_docker=y" >> .config
                && echo "CONFIG_PACKAGE_coreutils-nohup=y" >> .config
 
             - name: Build Config

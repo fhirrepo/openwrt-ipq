@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-latest
         permissions:
             contents: write
-            
+        
         steps:
             - name: Set up build dependencies
               run: |
@@ -23,7 +23,12 @@ jobs:
                  ref: main
                  fetch-depth: 0
 
-            - name: Sync with immediate upstream fork (main-nss branch)
+            - name: Set Git identity
+              run: |
+                    git config user.name "github-actions"
+                    git config user.email "github-actions@github.com"
+                    
+            - name: Sync with immediate upstream fork (main branch)
               run: |
                     git remote add upstream https://github.com/qosmio/openwrt-ipq.git
                     git fetch upstream
@@ -39,24 +44,3 @@ jobs:
 
             - name: Clone config
               run: git clone https://${{ secrets.PAT }}@github.com/fhirrepo/custom_openwrt.git files/etc/uci-defaults && rm -rf files/etc/uci-defaults/.git && rm -rf files/etc/uci-defaults/*.yml
-
-            - name: Update feeds
-              # run:  make package/symlinks
-              run: cp feeds.conf.default feeds.conf
-               && scripts/feeds update -a
-               && scripts/feeds install -a
-
-            - name: Generate MX4300 NSS Config
-              run: cp nss-setup/config-nss.seed .config
-               && sed -i 's/# CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300 is not set/CONFIG_TARGET_qualcommax_ipq807x_DEVICE_linksys_mx4300=y/g' .config
-               && echo "CONFIG_PACKAGE_block-mount=y" >> .config
-               && echo "CONFIG_PACKAGE_kmod-usb-storage-uas=y" >> .config
-               && echo "CONFIG_PACKAGE_luci-app-dockerman=y" >> .config
-               && echo "CONFIG_PACKAGE_dockerd=y" >> .config
-               && echo "CONFIG_PACKAGE_docker-compose=y" >> .config
-               && echo "CONFIG_PACKAGE_docker=y" >> .config
-               && echo "CONFIG_PACKAGE_openssh-sftp-server=y" >> .config
-               && echo "CONFIG_PACKAGE_coreutils-nohup=y" >> .config
-
-            - name: Build Config
-              run: make defconfig V=s -j$(nproc)

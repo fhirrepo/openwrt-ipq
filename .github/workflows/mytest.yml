@@ -1,15 +1,24 @@
-name: test NSS Build
+name: test file 24.10 NSS Build
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to build/rebase (e.g. main-nss, main, 24.10-nss)"
+        required: true
+        default: "main"
 
 jobs:
     build:
-        name: test NSS Build
+        name: test file 24.10 NSS Build
         runs-on: ubuntu-latest
         permissions:
             contents: write
         
         steps:
+            - name: Show selected branch
+              run: echo "Building branch:${{ github.event.inputs.branch }}"
+              
             - name: Set up build dependencies
               run: |
                 sudo apt update
@@ -20,27 +29,22 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
               with:
-                 ref: main
-                 fetch-depth: 0
+                ref: ${{ github.event.inputs.branch }}
+                fetch-depth: 0
 
             - name: Set Git identity
               run: |
                     git config user.name "github-actions"
                     git config user.email "github-actions@github.com"
                     
-            - name: Sync with immediate upstream fork (main branch)
+            - name: Sync with immediate upstream fork
               run: |
-                    git remote add upstream https://github.com/qosmio/openwrt-ipq.git
-                    git fetch upstream
-
-                    # Checkout your branch
-                    git checkout main
-
-                    # Rebase onto upstream's branch of the same name
-                    git rebase upstream/main || true
-
-                    # Push the rebased branch back to your fork
-                    git push origin main --force-with-lease
+                  BRANCH=${{ github.event.inputs.branch }}
+                  git remote add upstream https://github.com/qosmio/openwrt-ipq.git
+                  git fetch upstream
+                  git checkout "$BRANCH"
+                  git rebase "upstream/$BRANCH" || true
+                  git push origin "$BRANCH" --force-with-lease
 
             - name: Clone config
               run: git clone https://${{ secrets.PAT }}@github.com/fhirrepo/custom_openwrt.git files/etc/uci-defaults && rm -rf files/etc/uci-defaults/.git && rm -rf files/etc/uci-defaults/*.yml

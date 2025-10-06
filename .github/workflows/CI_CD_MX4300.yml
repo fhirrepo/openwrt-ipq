@@ -1,4 +1,4 @@
-name: 24.10 branch files MX4300 NSS Build
+name: CI_CD MX4300 NSS Build
 
 on:
   workflow_dispatch:

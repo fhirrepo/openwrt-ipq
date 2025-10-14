@@ -136,6 +136,7 @@ jobs:
                && echo "CONFIG_PACKAGE_docker=y" >> .config
                && echo "CONFIG_PACKAGE_openssh-sftp-server=y" >> .config
                && echo "CONFIG_PACKAGE_coreutils-nohup=y" >> .config
+               && echo "CONFIG_PACKAGE_ip-bridge=y" >> .config
 
             - name: Build Config
               run: make defconfig V=s -j$(nproc)
